@@ -1,0 +1,10 @@
+venv/
+data/sqlite/inventory.db
+data/sqlite/transactions.db
+data/income
+controller/__pycache__/
+models/__pycache__/
+view/__pycache__/
+__pycache__/
+
+
