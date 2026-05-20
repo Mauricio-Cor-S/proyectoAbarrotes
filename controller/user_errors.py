@@ -4,10 +4,11 @@ from abc import ABC, abstractmethod
 
 class DumbUser(Exception,ABC):
     def __init__(self,msg=None):
+        self._msg = msg
         super().__init__(msg or self.error_msg)
 
     def __str__(self):
-        return self.error_msg
+        return self._msg or self.error_msg
 
     @property
     @abstractmethod

@@ -238,11 +238,17 @@ class App(ctk.CTk):
             if product_id == "":
                 raise ue.InvalidNumber("Falta el ID del producto cabezón.")
             barcode = self.barcode_entry.get().strip()
+            if barcode == "":
+                raise ue.InvalidNumber("Falta el código de barras del producto.")
             name = self.name_entry.get().strip()
+            if name == "":
+                raise ue.InvalidNumber("Falta el nombre del producto.")
             description = self.description_entry.get().strip()
             price = self.parse_price(self.price_entry.get().strip())
             selling_price = self.parse_price(self.selling_price_entry.get().strip())
             category = self.category_entry.get().strip()
+            if category == "":
+                raise ue.InvalidNumber("Falta la categoría del producto.")
             self.inventory.add_product(
                 product_id,
                 barcode,
@@ -285,6 +291,8 @@ class App(ctk.CTk):
 
         try:
             product_id = self.id_entry.get().strip()
+            if product_id == "":
+                raise ue.InvalidNumber("Falta el ID del producto cabezón.")
             amount = self.parse_amount(self.amount_entry.get().strip())
 
             expiry = self.parse_expiry(self.expiry_entry.get().strip())
@@ -304,6 +312,8 @@ class App(ctk.CTk):
     def sell_product(self):
         try:
             product_id = self.id_entry.get().strip()
+            if product_id == "":
+                raise ue.InvalidNumber("Falta el ID del producto cabezón.")
             amount = self.parse_amount(self.amount_entry.get().strip())
             self.inventory.sell(amount,product_id)
             self.refresh_inventory()
@@ -317,6 +327,8 @@ class App(ctk.CTk):
     def trash_product(self):
         try:
             product_id = self.id_entry.get().strip()
+            if product_id == "":
+                raise ue.InvalidNumber("Falta el ID del producto cabezón cabezón.")
             amount = self.parse_amount(self.amount_entry.get().strip())
             expiry = self.parse_expiry(self.expiry_entry.get().strip())
             self.inventory.trash(amount,product_id,expiry)
