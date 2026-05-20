@@ -1,9 +1,13 @@
 from pathlib import Path
 from decimal import Decimal, InvalidOperation
+import sys
 
+if getattr(sys, 'frozen', False):
+    BASE_DIR = Path(sys.executable).resolve().parent
+else:
+    BASE_DIR = Path(__file__).resolve().parent.parent
 
-BASE_DIR = Path(__file__).resolve().parent
-INCOME_FILE = BASE_DIR.parent / "data" / "income"
+INCOME_FILE = BASE_DIR / "data" / "income"
 
 def upd_income(income):
     INCOME_FILE.parent.mkdir(parents=True, exist_ok=True)
