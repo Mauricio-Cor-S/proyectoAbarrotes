@@ -6,7 +6,7 @@ Con este programa milagroso de escritorio, usted podrá administrar su próxima 
 ## INSTALACIÓN
 
 ### Clonar proyecto
-´git clone https://github.com/Mauricio-Cor-S/proyectoAbarrotes´
+`git clone https://github.com/Mauricio-Cor-S/proyectoAbarrotes`
 
 ### Entrar al directorio
 
@@ -19,3 +19,5 @@ Con este programa milagroso de escritorio, usted podrá administrar su próxima 
 ´python main.py´
 
 ### Disfrutar de maravilloso programa
+
+Se puede crear un ejecutable utilizando el comando: `pyinstaller --onedir --noconsole --add-data "data;data" main.py` dentro de el entorno virtual.
