@@ -63,3 +63,7 @@ class StockInsufficient(DumbUser):
     def error_msg(self):
         return "No cuenta con mercancía suficiente. Intente de nuevo."
 
+class MissingField(DumbUser):
+    @property
+    def error_msg(self):
+        return "Falta un campo requerido. Intente de nuevo."

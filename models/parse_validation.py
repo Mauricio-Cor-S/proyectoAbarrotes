@@ -46,3 +46,26 @@ def expiry_to_json(expiry_dict):
         d.isoformat(): quantity
         for d, quantity in expiry_dict.items() #creo que esto funciona
     })
+
+def require_field(text, msg):
+    if text == "":
+        raise ue.MissingField(msg)
+
+def parse_price(text):
+    if text == "":
+        raise ue.InvalidNumber()
+    return validate_cur(text)
+
+def parse_amount(text):
+    if text == "":
+        raise ue.InvalidNumber()
+    amount = validate_cur(text)
+    if amount != amount.quantize(Decimal("1")):
+        raise ue.InvalidNumber()
+    return int(amount)
+
+def parse_expiry(text):
+    text = text.strip()
+    if text == "":
+        return None
+    return parse_date(text)

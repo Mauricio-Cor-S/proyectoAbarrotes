@@ -1,9 +1,9 @@
 import customtkinter as ctk
 from tkinter import messagebox as mb
-import controller.user_errors as ue
-from decimal import Decimal
-from models.parse_validation import validate_cur, parse_date
 
+from decimal import Decimal
+import controller.user_errors as ue
+from models.parse_validation import parse_price, parse_amount, parse_expiry, require_field
 
 class App(ctk.CTk):
 
@@ -216,39 +216,19 @@ class App(ctk.CTk):
                 self.inventory_text.insert("end","    Sin fechas de caducidad\n")
         self.inventory_text.configure(state="disabled")
 
-    def parse_price(self, text):
-        if text == "":
-            raise ue.InvalidNumber()
-        return validate_cur(text)
-    def parse_amount(self, text):
-        if text == "":
-            raise ue.InvalidNumber()
-        amount = validate_cur(text)
-        if amount != amount.quantize(Decimal("1")): #para ver que no tenga decimales
-            raise ue.InvalidNumber()
-        return int(amount)
-    def parse_expiry(self, text):
-        text = text.strip()
-        if text == "":
-            return None
-        return parse_date(text)
     def add_product(self):
         try:
             product_id = self.id_entry.get().strip()
-            if product_id == "":
-                raise ue.InvalidNumber("Falta el ID del producto cabezón.")
+            require_field(product_id, "Falta el ID del producto cabezón.")
             barcode = self.barcode_entry.get().strip()
-            if barcode == "":
-                raise ue.InvalidNumber("Falta el código de barras del producto.")
+            require_field(barcode, "Falta el código de barras del producto.")
             name = self.name_entry.get().strip()
-            if name == "":
-                raise ue.InvalidNumber("Falta el nombre del producto.")
+            require_field(name, "Falta el nombre del producto.")
             description = self.description_entry.get().strip()
-            price = self.parse_price(self.price_entry.get().strip())
-            selling_price = self.parse_price(self.selling_price_entry.get().strip())
+            price = parse_price(self.price_entry.get().strip())
+            selling_price = parse_price(self.selling_price_entry.get().strip())
             category = self.category_entry.get().strip()
-            if category == "":
-                raise ue.InvalidNumber("Falta la categoría del producto.")
+            require_field(category, "Falta la categoría del producto.")
             self.inventory.add_product(
                 product_id,
                 barcode,
@@ -272,8 +252,7 @@ class App(ctk.CTk):
     def delete_product(self):
         try:
             product_id = self.id_entry.get().strip()
-            if product_id == "":
-                raise ue.InvalidNumber("Falta el ID del producto.")
+            require_field(product_id, "Falta el ID del producto.")
             self.inventory.delete_product(product_id)
             self.refresh_inventory()
             self.show_message("Producto eliminado.")
@@ -291,11 +270,9 @@ class App(ctk.CTk):
 
         try:
             product_id = self.id_entry.get().strip()
-            if product_id == "":
-                raise ue.InvalidNumber("Falta el ID del producto cabezón.")
-            amount = self.parse_amount(self.amount_entry.get().strip())
-
-            expiry = self.parse_expiry(self.expiry_entry.get().strip())
+            require_field(product_id, "Falta el ID del producto cabezón.")
+            amount = parse_amount(self.amount_entry.get().strip())
+            expiry = parse_expiry(self.expiry_entry.get().strip())
 
             if expiry is None:
                 raise ue.InvalidDate()
@@ -312,9 +289,8 @@ class App(ctk.CTk):
     def sell_product(self):
         try:
             product_id = self.id_entry.get().strip()
-            if product_id == "":
-                raise ue.InvalidNumber("Falta el ID del producto cabezón.")
-            amount = self.parse_amount(self.amount_entry.get().strip())
+            require_field(product_id, "Falta el ID del producto cabezón.")
+            amount = parse_amount(self.amount_entry.get().strip())
             self.inventory.sell(amount,product_id)
             self.refresh_inventory()
             self.show_message("Venta registrada.")
@@ -327,10 +303,9 @@ class App(ctk.CTk):
     def trash_product(self):
         try:
             product_id = self.id_entry.get().strip()
-            if product_id == "":
-                raise ue.InvalidNumber("Falta el ID del producto cabezón cabezón.")
-            amount = self.parse_amount(self.amount_entry.get().strip())
-            expiry = self.parse_expiry(self.expiry_entry.get().strip())
+            require_field(product_id, "Falta el ID del producto cabezón.")
+            amount = parse_amount(self.amount_entry.get().strip())
+            expiry = parse_expiry(self.expiry_entry.get().strip())
             self.inventory.trash(amount,product_id,expiry)
             self.refresh_inventory()
             self.show_message("Producto desechado.")
@@ -344,8 +319,7 @@ class App(ctk.CTk):
     def trash_expired(self):
         try:
             product_id = self.id_entry.get().strip()
-            if product_id == "":
-                raise ue.InvalidNumber("Falta el ID del producto cabezón.")
+            require_field(product_id, "Falta el ID del producto cabezón.")
             self.inventory.trash_expired(product_id)
             self.refresh_inventory()
             self.show_message("Caducados desechados.")
